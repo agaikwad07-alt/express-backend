@@ -64,7 +64,7 @@ app.post("/newbook", (req, res) => {
       else throw err;
     }
   );
-  console.log("abc");
+  console.log("abc123");
 });
 
 //Update book details
