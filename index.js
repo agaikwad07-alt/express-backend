@@ -64,21 +64,34 @@ app.post("/newbook", (req, res) => {
       else throw err;
     }
   );
-  console.log("abc123");
 });
 
 //Update book details
 app.put("/updatebook", (req, res) => {
   const bookId = req.body.book_id;
-  const bookName = req.body.book_name;
-  const bookAuthor = req.body.book_author;
-  var bookArr = [bookName, bookAuthor, bookId];
+  let bookArr = [];
+  let sqlQuery = "update bookdetails set "
+  if(req.body.hasOwnProperty('book_name')){
+    const bookName = req.body.book_name;
+    bookArr.push(bookName);
+    sqlQuery = sqlQuery + "book_name = ? "
+  }
+  if(req.body.hasOwnProperty('book_author')){
+    const bookAuthor = req.body.book_author;
+    bookArr.push(bookAuthor);
+    sqlQuery = sqlQuery + ", book_author = ? "
+  }
+  bookArr.push(bookId);
+  sqlQuery = sqlQuery + "where book_id = ?";
+  console.log(sqlQuery);
+  console.log(bookArr);
   dbconnection.query(
-    "update bookdetails set book_name = ?, book_author = ? where book_id = ?",
+    sqlQuery,
     bookArr,
     (err, resluts, fields) => {
       if (!err) res.send("Book details updated successfully");
-      else console.log("Error while updating book details");
+      else throw err; 
+      //console.log("Error while updating book details");
     }
   );
 });
